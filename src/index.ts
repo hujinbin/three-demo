@@ -1,4 +1,6 @@
-import { Scene, PerspectiveCamera , WebGLRenderer} from "three";
+import { Scene, PerspectiveCamera , WebGLRenderer,PlaneGeometry} from "three";
+
+import { Water } from './Objects/water'
 
 export const scene = new Scene()
 export const camera = new PerspectiveCamera(
@@ -18,8 +20,16 @@ async function init() {
     document.body.appendChild(renderer.domElement);
 }
 
+const waterGeometry = new PlaneGeometry(10000, 10000);
+
+const water = new Water(waterGeometry)
 
 const animate = () => {
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
 }
+
+scene.add(water);
+
+
+init()

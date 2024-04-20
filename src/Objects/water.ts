@@ -3,8 +3,8 @@ import {
 } from 'three';
 
 class Water extends Mesh {
-    constructor() {
-        super();
+    constructor(geometry:any) {
+        super(geometry);
     }
 }
 
