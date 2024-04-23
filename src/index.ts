@@ -1,9 +1,12 @@
-import { Scene, PerspectiveCamera , 
-    WebGLRenderer,PlaneGeometry,
+import {
+    Scene, PerspectiveCamera,
+    WebGLRenderer, PlaneGeometry,
     TextureLoader, RepeatWrapping,
-    Vector3
+    Vector3,
+    PMREMGenerator
 } from "three";
 
+import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { Water } from 'three/examples/jsm/objects/Water.js';
 
 export const scene = new Scene()
@@ -23,19 +26,26 @@ const water = new Water(
     {
         textureWidth: 512,
         textureHeight: 512,
-        waterNormals: new TextureLoader().load('./waternormals.jpg', function (texture) {
-            texture.wrapS = texture.wrapT = RepeatWrapping;
-        }),
         sunDirection: new Vector3(),
         sunColor: 0xffffff,
         waterColor: 0x001e0f,
-        distortionScale: 3.7, 
+        distortionScale: 3.7,
     }
 );
 water.rotation.x = - Math.PI / 2;
 
 let renderer: WebGLRenderer;
 
+
+const sky = new Sky();
+sky.scale.setScalar(10000); 
+scene.add(sky); 
+
+const skyUniforms = sky.material.uniforms;
+skyUniforms['turbidity'].value = 10;
+skyUniforms['rayleigh'].value = 2;
+skyUniforms['mieCoefficient'].value = 0.005;
+skyUniforms['mieDirectionalG'].value = 0.8;
 
 
 function render() {
@@ -52,7 +62,11 @@ async function init() {
     render()
     console.log(water)
     scene.add(water);
+    const pmremGenerator = new PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(sky as any).texture;
 }
+
+
 
 const animate = () => {
     requestAnimationFrame(animate);
