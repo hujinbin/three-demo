@@ -3,11 +3,15 @@ import {
     WebGLRenderer, PlaneGeometry,
     TextureLoader, RepeatWrapping,
     Vector3,
-    PMREMGenerator
+    PMREMGenerator,
+    Object3D
 } from "three";
 
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
 import { Water } from 'three/examples/jsm/objects/Water.js';
+let rocketModel: Object3D;
+const gltfLoader = new GLTFLoader();
 
 export const scene = new Scene()
 export const camera = new PerspectiveCamera(
@@ -65,7 +69,6 @@ async function init() {
     const pmremGenerator = new PMREMGenerator(renderer);
     scene.environment = pmremGenerator.fromScene(sky as any).texture;
 }
-
 
 
 const animate = () => {
